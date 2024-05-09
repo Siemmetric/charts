@@ -8,14 +8,10 @@ keywords:
 - storm
 - zookeeper
 maintainers:
-- name: of13tch
-- name: stackedsax
-- name: mariannovotny
-- name: jgiannuzzi
-- name: yasram1
+- name: siemmetric
 name: storm
 sources:
-- https://github.com/G-Research/charts/tree/master/src/storm
+- https://github.com/siemmetric/charts/tree/master/src/storm
 - https://github.com/apache/storm
 dependencies:
 - name: zookeeper
