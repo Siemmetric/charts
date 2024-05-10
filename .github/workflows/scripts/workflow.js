@@ -2,7 +2,7 @@ module.exports = async ({ core, context, fetch }, token) => {
   const { Octokit } = require("@octokit/core")
   const octokit = new Octokit({ auth: token, request: { fetch: fetch } });
 
-  const owner = 'G-Research'
+  const owner = 'Siemmetric'
   const repo = 'charts'
   const ref = 'master'
   const workflow_name = 'Push'
