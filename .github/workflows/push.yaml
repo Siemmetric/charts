@@ -31,10 +31,6 @@ env:
 jobs:
   push:
     runs-on: self-hosted
-    container:
-      image: ghcr.io/myoung34/docker-github-actions-runner:ubuntu-noble
-      volumes:
-        - ${{ github.workspace }}:/tmp
     environment: push
     steps:
       - name: Checkout self

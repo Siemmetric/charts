@@ -13,10 +13,6 @@ on:
 jobs:
   invoke-push:
     runs-on: self-hosted
-    container:
-      image: ghcr.io/myoung34/docker-github-actions-runner:ubuntu-noble
-      volumes:
-        - ${{ github.workspace }}:/tmp
     environment: invoke-push
     steps:
       - name: Checkout self
