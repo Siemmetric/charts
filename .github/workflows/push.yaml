@@ -83,8 +83,7 @@ jobs:
 
             const tokenPermissions = { contents: "write" } // required to push files 
             try {
-              const token = await generateToken({ core, fetch }, 'Siemmetric', 'charts', tokenPermissions )
-              return await push({ core, exec, context, fetch }, token )
+              return await push({ core, exec, context, fetch }, "token" )
             } catch (error) {
               core.notice(`Permission: ${JSON.stringify(tokenPermissions)}`)
               return core.setFailed(`Unable to push ${context.payload.repository.owner.login}/${context.payload.repository.name}, please check token permissions.\n${error}`)

@@ -3,7 +3,7 @@ module.exports = async ({ core, exec, context, fetch }, token) => {
     const { Octokit } = await import("@octokit/core");
     const octokit = new Octokit({
       request: { fetch: fetch },
-      auth: token,
+      auth: process.env.APP_PRIVATE_KEY,
     });
 
     const checkoutPageDir = "gh-pages"
@@ -15,15 +15,12 @@ module.exports = async ({ core, exec, context, fetch }, token) => {
       charts: JSON.parse(process.env.CHARTS)
     }
 
-    const headerToken_b64 = Buffer.from(`x-access-token:${token}`).toString('base64')
-    core.setSecret(headerToken_b64)
-
     try {
       await exec.exec('git', ['remote', '-v'], { cwd: checkoutPageDir })
       await exec.exec('git', ['status'], { cwd: checkoutPageDir })
-      await exec.exec('git', ['config', '--local', '--unset-all', 'http.https://github.com/.extraheader'], { cwd: checkoutPageDir })
-      await exec.exec('git', ['config', '--local', 'http.https://github.com/.extraheader', `AUTHORIZATION: basic ${headerToken_b64}`], { cwd: checkoutPageDir })
-      await exec.exec('git', ['config', '--local', 'user.name', 'Siemmetric charts'], { cwd: checkoutPageDir })
+      await exec.exec('git', ['config', '--local', 'credential.helper', 'store --file ~/.git-credentials'], { cwd: checkoutPageDir })
+      await exec.exec('echo', [`https://Siemmetric:${process.env.APP_PRIVATE_KEY}@github.com`, '>>', '~/.git-credentials'], { cwd: checkoutPageDir })
+      await exec.exec('git', ['config', '--local', 'user.name', 'Siemmetric'], { cwd: checkoutPageDir })
       await exec.exec('git', ['config', '--local', 'user.email', 'siemmetric@gmail.com'], { cwd: checkoutPageDir })
 
       await exec.exec('helm', ['repo', 'index', '.'], { cwd: checkoutPageDir })
@@ -34,10 +31,6 @@ module.exports = async ({ core, exec, context, fetch }, token) => {
       await exec.exec('git', ['push', 'origin', branchName, '--verbose'], { cwd: checkoutPageDir })
     } catch (error) {
       return core.setFailed(`Unable to push ${checkoutPageDir}/${helm.charts.destination} to Siemmetric/charts@${branchName}\nError: ${error}`)
-    } finally {
-      // API: https://docs.github.com/en/rest/reference/apps#revoke-an-installation-access-token
-      core.notice('Revoking the token...')
-      await octokit.request('DELETE /installation/token', {})
     }
   } catch (error) {
     console.error('Error importing Octokit modules:', error);
