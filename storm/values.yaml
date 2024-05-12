@@ -46,7 +46,7 @@ supervisor:
   # Define the number of slots/workers per supervisor, each worker/slot is assigned a port
   slots: 4
   worker:
-    heap_memory_mb: 768
+    heap_memory_mb: 64
     childopts: "-Xmx%HEAP-MEM%m -XX:+HeapDumpOnOutOfMemoryError -XX:HeapDumpPath=artifacts/heapdump"
 
   ## @param extraVolumes Optionally specify extra list of additional volumes for the Supervisor pod(s)
