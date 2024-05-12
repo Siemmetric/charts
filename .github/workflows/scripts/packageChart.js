@@ -48,7 +48,11 @@ module.exports = async ({ core, exec }) => {
       // Run Helm unit tests if enabled
       if (chart.tests) {
         core.notice(`Packaging the ${chart.name} chart`)
-        await exec.exec('helm', ['plugin', 'install', 'https://github.com/helm-unittest/helm-unittest', '--version', `${process.env.HELM_UNITTEST_VERSION}`], { cwd: `${checkoutSourceDir}/${chart.source}` })
+        try {
+          await exec.exec('helm', ['plugin', 'install', 'https://github.com/helm-unittest/helm-unittest', '--version', `${process.env.HELM_UNITTEST_VERSION}`], { cwd: `${checkoutSourceDir}/${chart.source}` })
+        } catch (error) {
+          core.notice(`WARN: ${error}`);
+        }
         try {
           await exec.exec('helm', ['unittest', '.', '-o', 'test-output.xml', '-t', 'junit'], { cwd: `${checkoutSourceDir}/${chart.source}` })
         } catch (error) {
